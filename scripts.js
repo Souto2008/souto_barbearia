@@ -46,6 +46,36 @@ document.addEventListener('DOMContentLoaded', function() {
         handleScroll();
     }
     
+    // --- MENU MOBILE (HAMBÚRGUER) ---
+    // Cria e controla o menu lateral em dispositivos móveis
+    const headerContent = document.querySelector('.header-content');
+    const navUl = document.querySelector('header nav ul');
+
+    // Só executa se encontrar o cabeçalho e o menu (evita erros em páginas sem menu)
+    if (headerContent && navUl) {
+        // 1. Criar o botão hambúrguer dinamicamente via JavaScript
+        const mobileBtn = document.createElement('button');
+        mobileBtn.className = 'mobile-menu-btn';
+        mobileBtn.innerHTML = '<span></span><span></span><span></span>'; // As 3 linhas do ícone
+        mobileBtn.setAttribute('aria-label', 'Abrir Menu');
+        
+        // Adiciona o botão ao cabeçalho (ficará ao lado do logo devido ao flexbox)
+        headerContent.appendChild(mobileBtn);
+
+        // 2. Evento de clique para abrir/fechar
+        mobileBtn.addEventListener('click', function() {
+            navUl.classList.toggle('active'); // Mostra/esconde o menu lateral
+            mobileBtn.classList.toggle('active'); // Anima o ícone para um X
+        });
+
+        // 3. Fechar o menu automaticamente ao clicar num link
+        navUl.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navUl.classList.remove('active');
+                mobileBtn.classList.remove('active');
+            });
+        });
+    }
 
     
     // --- ATUALIZAÇÃO AUTOMÁTICA DO ANO NO RODAPÉ ---
@@ -56,30 +86,96 @@ document.addEventListener('DOMContentLoaded', function() {
         yearSpan.textContent = new Date().getFullYear();
     }
 
-    // --- CONFIRMAÇÃO DE LOGOUT ---
+    // --- SISTEMA DE NOTIFICAÇÕES CUSTOMIZADO ---
+    // Injeta o HTML do modal no corpo da página
+    const modalHTML = `
+        <div id="custom-modal-overlay" class="custom-modal-overlay">
+            <div id="custom-modal" class="custom-modal">
+                <h3 id="modal-title"></h3>
+                <p id="modal-message"></p>
+                <div class="modal-buttons">
+                    <button id="modal-btn-cancel" class="cta-button" style="background-color: transparent; border: 1px solid var(--cor-texto-suave); color: var(--cor-texto-suave);">Cancelar</button>
+                    <button id="modal-btn-confirm" class="cta-button">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+    const modalOverlay = document.getElementById('custom-modal-overlay');
+    const modalTitle = document.getElementById('modal-title');
+    const modalMessage = document.getElementById('modal-message');
+    const btnConfirm = document.getElementById('modal-btn-confirm');
+    const btnCancel = document.getElementById('modal-btn-cancel');
+
+    let confirmCallback = null;
+
+    function showCustomConfirm(title, message, callback) {
+        modalTitle.textContent = title;
+        modalMessage.textContent = message;
+        confirmCallback = callback;
+        modalOverlay.classList.add('active');
+    }
+
+    function hideModal() {
+        modalOverlay.classList.remove('active');
+        confirmCallback = null;
+    }
+
+    btnConfirm.addEventListener('click', () => {
+        if (typeof confirmCallback === 'function') {
+            confirmCallback();
+        }
+        hideModal();
+    });
+
+    btnCancel.addEventListener('click', hideModal);
+    modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) {
+            hideModal();
+        }
+    });
+
+
+    // --- CONFIRMAÇÃO DE LOGOUT (CUSTOM) ---
     const logoutLink = document.getElementById('logout-link');
-    // Se o link de logout for encontrado...
     if (logoutLink) {
-        // ...adiciona um ouvinte ao evento de 'click'.
         logoutLink.addEventListener('click', function(event) {
-            // Mostra uma caixa de confirmação. Se o utilizador clicar em "Cancelar"...
-            if (!confirm('Tem a certeza que quer dar logout?')) {
-                // ...impede a ação padrão do link (que seria navegar para logout.php).
-                event.preventDefault(); 
-            }
+            event.preventDefault(); // Impede a navegação imediata
+            showCustomConfirm(
+                'Terminar Sessão',
+                'Tem a certeza que quer dar logout?',
+                () => {
+                    window.location.href = logoutLink.href; // Navega se confirmar
+                }
+            );
         });
     }
 
-
+    // --- CONFIRMAÇÃO DE CANCELAMENTO (CUSTOM) ---
+    const formsCancelar = document.querySelectorAll('.form-cancelar');
+    formsCancelar.forEach(form => {
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Impede o envio imediato
+            showCustomConfirm(
+                'Cancelar Marcação',
+                'Tem a certeza que deseja cancelar esta marcação? Esta ação não pode ser revertida.',
+                () => {
+                    form.submit(); // Submete o formulário se o user confirmar
+                }
+            );
+        });
+    });
 
     // --- LÓGICA DINÂMICA PARA A PÁGINA DE MARCAÇÃO (ATUALIZADA) ---
 const inputData = document.getElementById('data');
-const selectHora = document.getElementById('hora');
+const inputHora = document.getElementById('hora'); // Agora é um input hidden
+const containerHorarios = document.getElementById('horarios-container'); // Novo container visual
 // NOVO: Referência ao novo seletor de serviço
 const selectServico = document.getElementById('servico'); 
 
 // Se os campos existirem na página...
-if (inputData && selectHora && selectServico) {
+if (inputData && inputHora && containerHorarios && selectServico) {
     
     // Define o mínimo de data hoje para evitar marcações passadas no navegador
     inputData.min = new Date().toISOString().split('T')[0];
@@ -89,11 +185,12 @@ if (inputData && selectHora && selectServico) {
         const dataSelecionada = inputData.value;
         const servicoSelecionado = selectServico.value;
         
+        // Limpa o valor selecionado anteriormente
+        inputHora.value = '';
+
         // 1. Verificação: Ambos os campos (Data e Serviço) são obrigatórios
         if (!dataSelecionada || !servicoSelecionado) {
-            // Se faltar algum valor, limpa o select da hora e mostra a mensagem padrão
-            selectHora.innerHTML = '<option value="" disabled selected>Escolha o serviço e a data</option>';
-            selectHora.disabled = true;
+            containerHorarios.innerHTML = '<div class="msg-horarios">Escolha o serviço e a data</div>';
             return; 
         }
 
@@ -107,8 +204,7 @@ if (inputData && selectHora && selectServico) {
         const url = `horarios_livres.php?data=${dataSelecionada}&servico_id=${servicoSelecionado}`;
 
         // 4. Limpa e mostra estado de carregamento
-        selectHora.innerHTML = '<option value="" disabled selected>A carregar horários...</option>';
-        selectHora.disabled = true;
+        containerHorarios.innerHTML = '<div class="msg-horarios">A carregar horários...</div>';
 
         // 5. Chamada AJAX
         fetch(url)
@@ -127,8 +223,7 @@ if (inputData && selectHora && selectServico) {
                 return response.json();
             })
             .then(horarios => {
-                selectHora.disabled = false;
-                selectHora.innerHTML = ''; // Limpa as opções de carregamento
+                containerHorarios.innerHTML = ''; // Limpa a mensagem de carregamento
 
                 // Obter a data e hora atuais
                 const agora = new Date();
@@ -148,31 +243,33 @@ if (inputData && selectHora && selectServico) {
                 }
 
                 if (horariosFiltrados.length === 0) {
-                    selectHora.innerHTML = '<option value="" disabled selected>Nenhum horário disponível para este dia.</option>';
+                    containerHorarios.innerHTML = '<div class="msg-horarios">Nenhum horário disponível para este dia.</div>';
                     return;
                 }
 
-                // Adiciona a opção padrão
-                let defaultOption = document.createElement('option');
-                defaultOption.value = "";
-                defaultOption.text = "Selecione o horário";
-                defaultOption.disabled = true;
-                defaultOption.selected = true;
-                selectHora.appendChild(defaultOption);
-
-                // Preenche com os horários disponíveis
+                // Gera os botões de horário
                 horariosFiltrados.forEach(hora => {
-                    let option = document.createElement('option');
-                    option.value = hora;
-                    option.text = hora;
-                    selectHora.appendChild(option);
+                    const btn = document.createElement('button');
+                    btn.type = 'button'; // Importante para não submeter o form
+                    btn.className = 'horario-btn';
+                    btn.textContent = hora;
+                    
+                    btn.addEventListener('click', function() {
+                        // Remove a classe 'selected' de todos os botões
+                        document.querySelectorAll('.horario-btn').forEach(b => b.classList.remove('selected'));
+                        // Adiciona ao clicado
+                        this.classList.add('selected');
+                        // Atualiza o input hidden que será enviado no form
+                        inputHora.value = hora;
+                    });
+
+                    containerHorarios.appendChild(btn);
                 });
             })
             .catch(error => {
                 console.error("Erro ao buscar horários:", error);
                 // Exibe a mensagem de erro que veio do 'throw' (do backend ou de rede)
-                selectHora.innerHTML = `<option value="" disabled selected>${error.message || 'Erro ao carregar horários.'}</option>`;
-                selectHora.disabled = true;
+                containerHorarios.innerHTML = `<div class="msg-horarios">${error.message || 'Erro ao carregar horários.'}</div>`;
             });
     }
 
@@ -192,7 +289,7 @@ if (inputData && selectHora && selectServico) {
         });
     }
 
-} // Fim do if (inputData && selectHora && selectServico)
+} // Fim do if (inputData && inputHora && containerHorarios && selectServico)
 
     // --- INICIALIZAÇÃO DE BIBLIOTECAS DE ANIMAÇÃO ---
     // Inicializa a biblioteca Lenis para um efeito de scroll mais suave.    

@@ -24,7 +24,7 @@ function gerarHorarios(string $data_selecionada, int $intervalo_minutos = 15): a
     // Mapa de horários de trabalho por dia da semana
     $horarios_semanais = [
         // 'Dia' => [ ['Inicio Manhã', 'Fim Manhã'], ['Inicio Tarde', 'Fim Tarde'] ]
-        1 => [['10:00', '13:00'], ['14:00', '19:00']], // Segunda
+        1 => [], // Segunda (Dia de Folga)
         2 => [['10:00', '13:00'], ['14:00', '19:00']], // Terça
         3 => [['10:00', '13:00'], ['14:00', '19:00']], // Quarta
         4 => [['10:00', '13:00'], ['14:00', '19:00']], // Quinta

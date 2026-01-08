@@ -86,7 +86,7 @@ require __DIR__ . '/config/db.php'; // Para a variável $pdo
             ?>
 
             <div class="form-group">
-                <label1>Selecione o Serviço:</label1>
+                <label class="center-label">Selecione o Serviço:</label>
 <br>
                 <!-- Menu de Categorias -->
                 <div class="categoria-tabs">
@@ -169,11 +169,12 @@ require __DIR__ . '/config/db.php'; // Para a variável $pdo
 
             <div class="form-group">
                 <label for="hora">Horário:</label>
-                <?php // Este 'select' é populado dinamicamente pelo scripts.js. ?>
-                <select name="hora_marcacao" id="hora" required>
-                    <?php // Opção inicial que instrui o utilizador. ?>
-                    <option value="" disabled selected>Escolha primeiro a data</option>
-                </select>
+                <!-- Input escondido para enviar o valor no formulário -->
+                <input type="hidden" name="hora_marcacao" id="hora" required>
+                <!-- Container onde os botões de horário vão aparecer -->
+                <div id="horarios-container" class="horarios-grid">
+                    <div class="msg-horarios">Escolha o serviço e a data para ver os horários.</div>
+                </div>
             </div>
 
             <button type="submit" class="cta-button">Agendar</button>

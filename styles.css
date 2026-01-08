@@ -33,6 +33,7 @@ body {
     background-color: var(--cor-primaria);
     color: var(--cor-secundaria);
     line-height: 1.5; /* Melhora a legibilidade do texto. */
+    overflow-x: hidden; /* Previne scroll horizontal indesejado na página inteira */
 }
 
 h1, h2, h3 {
@@ -86,7 +87,7 @@ header {
     background-color: transparent;
     backdrop-filter: blur(0px); /* Sem desfoque no topo. */
     -webkit-backdrop-filter: blur(0px); /* Para compatibilidade com mais browsers. */
-    padding: 1rem 0; /* O padding lateral vai para o contentor agora. */
+    padding: 2rem 0; /* Aumentado para descer o menu visualmente. */
     position: fixed; /* Fica fixo no topo e fora do fluxo normal do documento. */
     width: 100%; /* Garante que o cabeçalho ocupa a largura total. */
     top: 0;
@@ -105,6 +106,7 @@ header.header-scrolled {
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px); /* Para compatibilidade com mais browsers. */
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Sombra subtil para destacar o cabeçalho do conteúdo. */
+    padding: 1rem 0; /* Reduz o tamanho ao fazer scroll para não ocupar muito espaço */
 }
 
 header.header-hidden {
@@ -127,6 +129,7 @@ header li {
     display: flex;
     justify-content: space-between; /* Coloca o logo à esquerda e o menu à direita. */ 
     align-items: center;
+    width: 100%; /* Garante largura total */
     max-width: 1200px; /* Largura padrão para o conteúdo. */
     margin: 0 auto; /* Centra o contentor na horizontal. */
     padding: 0 2rem; /* Adiciona um espaçamento nas laterais para não colar nas bordas em ecrãs mais pequenos. */
@@ -137,6 +140,7 @@ header nav ul {
     display: flex;
     flex-direction: row; /* Garante que os itens do menu estão sempre na horizontal. */
     gap: 1.5rem; /* Espaçamento entre os itens do menu. */
+    gap: 2rem; /* Espaçamento entre os itens do menu. */
 }
 
 header nav a {
@@ -165,6 +169,50 @@ header .login-item a:hover {
     color: var(--cor-primaria); /* O texto fica escuro para contraste. */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6); /* A sombra fica mais forte no hover. */
     transform: translateY(-2px); /* Efeito de "levantar" o botão. */
+}
+
+/* === Botão Menu Mobile (Hambúrguer) === */
+.mobile-menu-btn {
+    display: none; /* Escondido por defeito em PC */
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 1003; /* Fica acima de tudo, inclusive do menu e do overlay */
+}
+
+.mobile-menu-btn span {
+    display: block;
+    width: 28px;
+    height: 3px;
+    background-color: var(--cor-destaque);
+    margin: 6px 0;
+    transition: 0.4s;
+    border-radius: 2px;
+}
+
+/* Animação do ícone quando o menu está aberto (vira um X) */
+.mobile-menu-btn.active span:nth-child(1) { transform: rotate(-45deg) translate(-6px, 7px); }
+.mobile-menu-btn.active span:nth-child(2) { opacity: 0; }
+.mobile-menu-btn.active span:nth-child(3) { transform: rotate(45deg) translate(-6px, -7px); }
+
+/* === Overlay do Menu Mobile (Fundo Escuro) === */
+.menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Escurece o fundo */
+    z-index: 1001; /* Fica acima do site, mas abaixo do menu */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
+    backdrop-filter: blur(2px); /* Desfoca ligeiramente o fundo */
+}
+
+.menu-overlay.active {
+    opacity: 1;
+    visibility: visible;
 }
 
 /* === Rodapé === */
@@ -305,7 +353,7 @@ main section p {
 
 .contact-details {
     flex: 1; /* Permite que os detalhes de contacto cresçam para ocupar o espaço. */
-    min-width: 300px; /* Garante uma largura mínima antes de quebrar a linha. */
+    min-width: 280px; /* Reduzido para caber em ecrãs de 320px */
     text-align: left; /* O texto é alinhado à esquerda para melhor legibilidade dos detalhes. */
 }
 
@@ -422,7 +470,7 @@ main section p {
 /* Mapa na secção de contactos (na página inicial) */
 .mapa {
     flex: 1; /* Permite que o mapa cresça para ocupar o espaço. */
-    min-width: 300px; /* Garante uma largura mínima. */
+    min-width: 280px; /* Reduzido para caber em ecrãs pequenos */
     aspect-ratio: 16 / 9; /* Proporção para o mapa, para que não fique muito alto. */
 }
 
@@ -434,7 +482,8 @@ main section p {
 
 /* --- Páginas de Formulário (login.php, registo.php, marcacao.php) --- */
 .form-page {
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('imagens/barbearia.jpg') no-repeat center center/cover;
+    background: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)), url('imagens/barbearia.jpg') no-repeat center center/cover;
+    background-attachment: fixed;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -446,8 +495,8 @@ main section p {
     background-color: var(--cor-fundo-seccao);
     padding: 2.5rem;
     border-radius: 8px;
-    width: 35%;
-    max-width: 400px;
+    width: 90%; /* Mudado de 35% para 90% para funcionar bem em tablets e telemóveis */
+    max-width: 450px; /* Limite máximo ligeiramente maior para conforto */
     text-align: center;
     border: 1px solid var(--cor-destaque);
 }
@@ -484,7 +533,7 @@ main section p {
     font-weight: 600;
 }
 
-.form-group label1 {
+.form-group .center-label {
     display: block;
     text-align: center;
     margin-bottom: 0.5rem;
@@ -506,6 +555,80 @@ main section p {
     -webkit-appearance: none; /* Remove o estilo padrão do navegador (Chrome, Safari). */
     -moz-appearance: none;    /* Remove o estilo padrão do navegador (Firefox). */
     appearance: none;         /* Remove o estilo padrão do navegador. */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: var(--cor-destaque);
+    box-shadow: 0 0 8px rgba(197, 164, 126, 0.3);
+    outline: none;
+}
+
+/* Seta personalizada dourada para o select (Horário) */
+.form-group select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23c5a47e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1.2rem;
+    padding-right: 2.5rem;
+    cursor: pointer;
+}
+
+/* === Grelha de Horários (Substitui o Select antigo) === */
+.horarios-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 horários por linha */
+    gap: 10px;
+    margin-top: 0.5rem;
+}
+
+.horario-btn {
+    background-color: var(--cor-primaria);
+    border: 1px solid var(--cor-borda-escura);
+    color: var(--cor-secundaria);
+    padding: 0.8rem 0;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: var(--fonte-principal);
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.horario-btn:hover {
+    border-color: var(--cor-destaque);
+    background-color: rgba(197, 164, 126, 0.1);
+    transform: translateY(-2px);
+}
+
+.horario-btn.selected {
+    background-color: var(--cor-destaque);
+    color: var(--cor-primaria);
+    border-color: var(--cor-destaque);
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(197, 164, 126, 0.3);
+}
+
+.msg-horarios {
+    color: var(--cor-texto-suave);
+    font-size: 0.9rem;
+    padding: 10px 0;
+    text-align: center;
+    width: 100%;
+    grid-column: 1 / -1; /* Ocupa a largura toda */
+}
+
+@media (max-width: 360px) {
+    .horarios-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 por linha em ecrãs muito pequenos (ex: iPhone SE) */
+    }
+}
+
+@media (max-width: 480px) {
+    .horarios-grid {
+        grid-template-columns: repeat(3, 1fr); /* 3 por linha em telemóveis */
+    }
 }
 
 /* Garante que o botão ocupa a largura total do formulário. */
@@ -561,7 +684,7 @@ main section p {
 /* Grelha para os itens de serviço */
 .servicos-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Ajustado para 280px para evitar quebra em ecrãs pequenos */
     gap: 2rem;
 }
 
@@ -588,6 +711,15 @@ main section p {
 /* === Media Queries para Responsividade === */
 /* Media queries ajustam o layout para diferentes tamanhos de ecrã. */
 /* Para tablets em modo paisagem e alguns portáteis (até 1024px) */
+
+/* Correção específica para iOS (iPhone/iPad) onde 'fixed' causa problemas de zoom/jitter */
+@media (hover: none) and (pointer: coarse) {
+    .form-page, #sobre, .agenda-body-background, .galeria-header, .servicos-header {
+        background-attachment: scroll !important;
+        background-size: cover;
+    }
+}
+
 @media (max-width: 1024px) {
     header nav ul {
         gap: 1.2rem;
@@ -606,16 +738,47 @@ main section p {
     }
 }
 
-/* Para tablets em modo retrato e telemóveis grandes (até 768px) */
-@media (max-width: 768px) {
-    /* No responsive styling needed for the navigation menu */
-    
+/* Para tablets (iPad) e telemóveis (até 1024px) - Menu Hambúrguer e Layout Fluido */
+@media (max-width: 1024px) {
+    /* Mostra o botão hambúrguer */
+    .mobile-menu-btn {
+        display: block;
+    }
+
+    /* Transforma a lista de links num menu lateral */
+    header nav ul {
+        position: fixed;
+        top: 0;
+        right: -100%; /* Começa escondido fora do ecrã à direita */
+        width: 75%; /* Ocupa 75% da largura */
+        height: 100vh; /* Altura total */
+        background-color: rgba(10, 10, 10, 0.98); /* Fundo escuro quase opaco */
+        backdrop-filter: blur(10px);
+        flex-direction: column; /* Links um debaixo do outro */
+        justify-content: center;
+        align-items: center;
+        transition: right 0.4s ease-in-out; /* Animação suave de deslize */
+        z-index: 1002; /* Fica acima do overlay */
+        box-shadow: -5px 0 15px rgba(0,0,0,0.5);
+        gap: 2rem; /* Mais espaço entre os links */
+        gap: 3rem; /* Mais espaço entre os links */
+    }
+
+    /* Classe adicionada via JS para abrir o menu */
+    header nav ul.active {
+        right: 0;
+    }
+
     #hero p {
         font-size: 1.2rem;
     }
 
     main {
         padding: 0 1rem; /* Reduz o espaçamento lateral do conteúdo principal */
+    }
+
+    header li {
+        font-size: 1.3rem; /* Aumenta o texto dos links no telemóvel */
     }
 
     #hero h2, #sobre h2, .servicos-header h1 {
@@ -647,16 +810,27 @@ main section p {
 /* Para a maioria dos telemóveis (até 480px) */
 @media (max-width: 480px) {
     body {
-        line-height: 1.5; /* Ajusta a altura da linha para texto mais pequeno */
+        line-height: 1.4; /* Altura de linha ligeiramente menor para ecrãs pequenos */
     }
 
-    /* Reduz o espaçamento lateral do cabeçalho em ecrãs muito pequenos */
+    /* === Ajustes do Menu (Cabeçalho) === */
+    header {
+        padding: 1rem 0; /* Ajustado para não ficar tão colado ao topo */
+    }
+    
+    /* Garante que o logo e o botão ficam na mesma linha */
     .header-content {
         padding: 0 1rem;
+        flex-direction: row; 
+        justify-content: space-between;
+    }
+
+    header h1 {
+        font-size: 1.4rem; /* Logo mais pequeno */
     }
 
     .cta-button {
-        padding: 0.8rem 1.5rem;
+        padding: 0.6rem 1.2rem;
         font-size: 1rem;
     }
 
@@ -674,17 +848,131 @@ main section p {
         grid-template-columns: 1fr;
     }
 
+    /* === Ajustes de Texto e Títulos === */
     #hero h2 {
-        font-size: 2.5rem;
+        font-size: 2rem; /* Reduz o título principal gigante */
+        line-height: 1.2;
+    }
+
+    #hero p {
+        font-size: 1rem; /* Reduz o subtítulo */
+        padding: 0 1rem;
+    }
+
+    /* Ajustes para reduzir a secção Sobre Nós em telemóveis */
+    #sobre {
+        min-height: auto; /* Deixa de ocupar o ecrã inteiro */
+        padding: 4rem 1rem;
+    }
+
+    #sobre h2 {
+        font-size: 2rem;
+    }
+
+    /* Remove o texto justificado em telemóveis para ficar tudo centrado e legível */
+    main section p {
+        text-align: center; 
+        font-size: 0.95rem;
+    }
+
+    /* === Melhorias na Página de Marcação (Mobile) === */
+    .form-page {
+        padding: 5rem 0.5rem 2rem 0.5rem; /* Mais espaço no topo, maximiza largura lateral */
+        align-items: flex-start; /* Alinha ao topo para evitar cortes em ecrãs pequenos */
+        height: auto; /* Permite crescer além da altura do ecrã */
+    }
+
+    .form-container {
+        padding: 1rem 0.5rem; /* Reduz padding interno para ganhar espaço */
+        width: 100%;
+        border: none; /* Remove borda para aspeto mais limpo */
+        background-color: transparent; /* Remove o fundo da caixa para integrar na página */
+    }
+
+    .form-logo h1 {
+        font-size: 2.2rem; /* Logo maior na página de marcação */
+    }
+
+    /* Aumenta o tamanho dos inputs e labels para toque fácil */
+    .form-group label, .form-group .center-label {
+        font-size: 1.1rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .form-group input {
+        padding: 15px; /* Input mais alto */
+        font-size: 1.1rem;
+        height: 55px;
+    }
+
+    /* Botões de categoria maiores e a ocupar a largura toda */
+    .categoria-tabs {
+        gap: 10px;
+        margin-bottom: 1.5rem;
+    }
+    .categoria-btn {
+        flex: 1; /* Faz os botões esticarem para encher a linha */
+        padding: 15px 5px; /* Botão mais alto */
+        font-size: 1rem;
+    }
+
+    /* Lista de serviços em coluna única para melhor leitura */
+    .servicos-lista {
+        grid-template-columns: 1fr; /* Uma coluna apenas */
+        gap: 15px;
+    }
+
+    /* Transforma o cartão num layout de linha (Nome à esq, Preço à dir) */
+    .servico-card {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: left;
+        padding: 20px 15px; /* Mais área de toque */
+        background-color: var(--cor-fundo-seccao); /* Fundo escuro para contraste */
+        border: 1px solid var(--cor-borda-escura);
+    }
+
+    .servico-card h4 {
+        font-size: 1.2rem !important; /* Aumenta o nome do serviço */
+        margin-bottom: 0 !important;
+    }
+
+    .servico-card div { /* Preço */
+        font-size: 1.3rem !important; /* Aumenta o preço */
+        font-weight: bold;
+        white-space: nowrap;
+        margin-left: 15px;
+    }
+
+    /* Grelha de horários com botões maiores */
+    .horarios-grid {
+        grid-template-columns: repeat(3, 1fr); /* 3 colunas para botões maiores */
+        gap: 12px;
+    }
+
+    /* Botões de horário mais altos e legíveis */
+    .horario-btn {
+        padding: 15px 0;
+        font-size: 1.1rem;
+        border-radius: 8px;
+    }
+
+    /* Botão de Agendar Gigante */
+    .form-container .cta-button {
+        padding: 1.2rem;
+        font-size: 1.3rem;
+        margin-top: 2rem;
+        border-radius: 50px; /* Estilo mais moderno/app */
+        box-shadow: 0 4px 15px rgba(197, 164, 126, 0.4);
     }
 }
 
 /* Media Query específica para os formulários em ecrãs pequenos (até 600px) */
 @media (max-width: 600px) {
     .form-container {
-        width: 90%; /* Ocupa 90% da largura do ecrã */
+        /* width: 90% já está definido na regra principal agora */
         padding: 20px; /* Reduz o espaçamento interno */
-        margin: 20px auto; /* Adiciona uma pequena margem superior/inferior */
     }
 
     .form-page h2 {
@@ -700,7 +988,7 @@ main section p {
 
 /* Estilo para o background da página da agenda do barbeiro */
 .agenda-body-background {
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('imagens/barbearia.jpg') no-repeat center center/cover;
+    background: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)), url('imagens/barbearia.jpg') no-repeat center center/cover;
     min-height: 100vh;
     background-attachment: fixed; /* Adiciona efeito parallax */
 }
@@ -750,6 +1038,9 @@ main section p {
     position: absolute;
     right: 10px;
     cursor: pointer;
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none;    /* Firefox */
+    -ms-user-select: none;     /* IE10+/Edge */
     user-select: none; /* Impede que o texto seja selecionado */
     font-size: 0.9rem;
     color: var(--cor-texto-suave);
@@ -765,13 +1056,24 @@ main section p {
 .calendar-icon {
     position: absolute;
     right: 10px;
-    cursor: pointer; /* Adicionado para indicar que é clicável */
-    color: var(--cor-secundaria);
+    cursor: pointer;
+    stroke: var(--cor-destaque); /* Ícone dourado */
+    transition: transform 0.3s ease;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 /* Esconde o ícone de calendário padrão do navegador */
 input[type="date"]::-webkit-calendar-picker-indicator {
     display: none;
+}
+
+.date-wrapper:hover .calendar-icon {
+    transform: translateY(-50%) scale(1.1);
+}
+
+input[type="date"] {
+    color-scheme: dark; /* Garante que o calendário nativo seja escuro */
 }
 
 /* Estilos para o container do calendário */
@@ -861,7 +1163,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
     /* Estilo do Painel da Tabela (Vidro Escuro) */
     .marcacoes-panel {
-        background-color: rgba(18, 18, 18, 0.95); /* Fundo muito escuro */
+        background-color: rgba(18, 18, 18, 0.98); /* Fundo quase opaco */
         border: 1px solid #c5a47e; /* Borda Dourada */
         border-radius: 8px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.8);
@@ -881,7 +1183,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         font-family: 'Playfair Display', serif;
         font-size: 1.1rem;
         border-bottom: 2px solid #c5a47e;
-        padding: 10px;
+        padding: 15px 20px;
         text-align: left;
     }
     .custom-table tbody tr {
@@ -893,7 +1195,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         transform: scale(1.01);
     }
     .custom-table td {
-        padding: 15px 10px;
+        padding: 25px;
         border-top: 1px solid #333;
         vertical-align: middle;
     }
@@ -926,6 +1228,73 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         background-color: #dc3545;
         color: white;
     }
+
+/* NOVO: Container para a página de marcações */
+.marcacoes-container {
+    margin-top: 70px;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 30px;
+}
+
+/* NOVO: Responsividade para a Tabela de Marcações (Modo Card Mobile) */
+@media (max-width: 768px) {
+    .marcacoes-container {
+        margin-top: 110px; /* Mais espaço para o cabeçalho fixo */
+        padding: 0 15px;
+    }
+
+    .marcacoes-panel {
+        padding: 0;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+    }
+
+    .custom-table thead {
+        display: none; /* Esconde o cabeçalho da tabela */
+    }
+
+    .custom-table, .custom-table tbody, .custom-table tr, .custom-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .custom-table tr {
+        margin-bottom: 20px;
+        background-color: rgba(30, 30, 30, 0.98);
+        border: 1px solid var(--cor-borda-escura);
+        border-radius: 12px;
+        padding: 15px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+
+    .custom-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: right;
+        padding: 12px 0;
+        border-top: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .custom-table td:last-child {
+        border-bottom: none;
+        justify-content: center;
+        padding-top: 15px;
+    }
+
+    .custom-table td::before {
+        content: attr(data-label); /* Usa o atributo data-label como título */
+        font-weight: bold;
+        color: var(--cor-destaque);
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        margin-right: 10px;
+    }
+}
 
 /* === Seletor de Serviços por Categoria (Menu de Abas) === */
 .categoria-tabs {
@@ -982,4 +1351,111 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     background-color: rgba(197, 164, 126, 0.15);
     transform: translateY(-3px);
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+/* Classe utilitária para tabelas responsivas (caso sejam usadas) */
+.table-responsive {
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Garante que em mobile/tablet não aparece scroll na tabela (que vira cards) */
+@media (max-width: 1024px) {
+    .table-responsive {
+        overflow-x: visible;
+    }
+}
+
+/* === Custom Modal / Notificações === */
+.custom-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0s 0.3s;
+}
+
+.custom-modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease;
+}
+
+.custom-modal {
+    background-color: var(--cor-fundo-seccao);
+    border: 1px solid var(--cor-destaque);
+    border-radius: 8px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+    transform: scale(0.95);
+    transition: transform 0.3s ease;
+}
+
+.custom-modal-overlay.active .custom-modal {
+    transform: scale(1);
+}
+
+.custom-modal h3 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: var(--cor-destaque);
+}
+
+.custom-modal p {
+    color: var(--cor-secundaria);
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+/* === Mensagens de Alerta (Feedback) === */
+.alert {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: bold;
+    border: 1px solid transparent;
+    width: 100%;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.alert-success {
+    background-color: rgba(40, 167, 69, 0.2); /* Verde transparente */
+    color: #5cd675; /* Verde claro legível */
+    border-color: #28a745;
+}
+
+.alert-danger {
+    background-color: rgba(220, 53, 69, 0.2); /* Vermelho transparente */
+    color: #ff8585; /* Vermelho claro legível */
+    border-color: #dc3545;
+}
+
+.alert-warning {
+    background-color: rgba(255, 193, 7, 0.2); /* Amarelo transparente */
+    color: #ffdf7e; /* Amarelo claro legível */
+    border-color: #ffc107;
 }

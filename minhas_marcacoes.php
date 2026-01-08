@@ -54,7 +54,7 @@ $header_style = 'barber';
 require_once 'templates/header.php';
 ?>
 
-<div class="container" style="margin-top: 40px; max-width: 1000px; margin-left: auto; margin-right: auto;">
+<div class="marcacoes-container">
     <div style="text-align: center; margin-bottom: 20px;">
         <h2 class="mb-4" style="color: #fff; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">As Minhas Marcações</h2>
     </div>
@@ -82,19 +82,19 @@ require_once 'templates/header.php';
                             $status_class = 'status-' . $m['estado'];
                         ?>
                         <tr>
-                            <td>
+                            <td data-label="Data e Hora">
                                 <span style="font-weight: bold; font-size: 1.1em;"><?php echo $data->format('d/m/Y'); ?></span><br>
                                 <span style="font-size: 0.9em; opacity: 0.8;"><?php echo $data->format('H:i'); ?></span>
                             </td>
-                            <td style="font-family: 'Montserrat', sans-serif;"><?php echo htmlspecialchars($m['servico_nome']); ?></td>
-                            <td>
+                            <td data-label="Serviço" style="font-family: 'Montserrat', sans-serif;"><?php echo htmlspecialchars($m['servico_nome']); ?></td>
+                            <td data-label="Estado">
                                 <span class="status-badge <?php echo $status_class; ?>">
                                     <?php echo ucfirst($m['estado']); ?>
                                 </span>
                             </td>
-                            <td style="text-align: center;">
+                            <td data-label="Ações" style="text-align: center;">
                                 <?php if ($pode_cancelar): ?>
-                                    <form method="POST" style="display:inline;" onsubmit="return confirm('Tem a certeza que deseja cancelar esta marcação?');">
+                                    <form method="POST" class="form-cancelar" style="display:inline;">
                                         <input type="hidden" name="action" value="cancelar">
                                         <input type="hidden" name="id" value="<?php echo $m['id']; ?>">
                                         <button type="submit" class="btn-cancelar">Cancelar</button>
