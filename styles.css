@@ -1,0 +1,985 @@
+/*
+ * styles.css
+ * Folha de estilos principal para o site Souto Barbearia.
+*/
+
+/* === Variáveis de Cor e Fontes === */
+/* As cores e fontes principais estão definidas como variáveis CSS. 
+   Para mudar a paleta do site, basta alterar estes valores num só lugar. */
+:root {
+    --cor-primaria: #0a0a0a; /* Um preto/cinza muito escuro para fundos */
+    --cor-secundaria: #f4f4f4; /* Um branco suave para o texto */
+    --cor-destaque: #c5a47e; /* Um tom de bronze/dourado para detalhes e links */
+    --cor-destaque-clara: #d8b995; /* Tom mais claro do destaque, para hovers e detalhes */
+    --cor-fundo-seccao: #1a1a1a; /* Um cinza um pouco mais claro para as secções */
+    --cor-borda-escura: #2a2a2a; /* Tom para bordas subtis em fundos escuros */
+    --cor-texto-suave: #aaa; /* Cinza claro para textos menos importantes */
+    --fonte-principal: 'Montserrat', 'Helvetica', 'Arial', sans-serif; /* Fonte para textos normais e botões */
+    --fonte-titulos: 'Montserrat', 'Helvetica', 'Arial', sans-serif; /* Fonte para títulos */
+    --sombra-texto: 3px 1px 3px #000000;
+}
+
+/* === Estilos Gerais (Reset e Base) === */
+/* Um "reset" simples para garantir que o site tem uma aparência consistente em todos os browsers,
+   removendo margens e paddings padrão. */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* Isto faz com que o padding não afete a largura final dos elementos. É uma boa prática. */
+}
+
+body {
+    font-family: var(--fonte-principal);
+    background-color: var(--cor-primaria);
+    color: var(--cor-secundaria);
+    line-height: 1.5; /* Melhora a legibilidade do texto. */
+}
+
+h1, h2, h3 {
+    font-family: var(--fonte-titulos);
+    color: var(--cor-destaque);
+    margin-bottom: 1rem;
+    text-shadow: var(--sombra-texto);
+}
+
+p {
+    margin-bottom: 1rem;
+    font-size: 16px;
+}
+
+a {
+    color: var(--cor-destaque);
+    text-decoration: none;
+}
+
+img { 
+    max-width: 100%; /* Garante que as imagens nunca ultrapassam o contentor. Essencial para responsividade. */
+    height: auto;
+    display: block;
+}
+
+
+/* Estilo base para os botões (Call to Action, Voltar, etc.) */
+.cta-button,
+.back-button { 
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.7rem 1.8rem;
+    background-color: var(--cor-destaque);
+    color: var(--cor-primaria);
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.cta-button:hover,
+.back-button:hover { 
+    background-color: var(--cor-destaque-clara); /* Tom ligeiramente mais claro no hover. */
+    transform: scale(1.05); /* Efeito de zoom subtil. */
+}
+
+/* === Cabeçalho e Navegação === */
+header {
+    /* Por defeito, o fundo é transparente para se sobrepor à secção #hero. */
+    background-color: transparent;
+    backdrop-filter: blur(0px); /* Sem desfoque no topo. */
+    -webkit-backdrop-filter: blur(0px); /* Para compatibilidade com mais browsers. */
+    padding: 1rem 0; /* O padding lateral vai para o contentor agora. */
+    position: fixed; /* Fica fixo no topo e fora do fluxo normal do documento. */
+    width: 100%; /* Garante que o cabeçalho ocupa a largura total. */
+    top: 0;
+    z-index: 1000; /* Garante que o cabeçalho fica por cima de outros elementos. */
+    /* Adiciona uma transição suave para o movimento de aparecer/desaparecer. */
+    /* Transição para o fundo, desfoque e a transformação ao rolar. */
+    transition: background-color 0.4s ease-in-out, backdrop-filter 0.4s ease-in-out, -webkit-backdrop-filter 0.4s ease-in-out, transform 0.4s ease-in-out;
+}
+
+/* Esta classe é adicionada via JavaScript (em scripts.js) quando o utilizador faz scroll,
+   mudando o seu estilo e/ou fazendo-o deslizar para fora do ecrã. */
+header.header-scrolled {
+    /* Adiciona um fundo escuro semi-transparente. A transparência (0.5) é crucial para o blur funcionar. */
+    background-color: rgba(10, 10, 10, 0.5); 
+    /* Aplica o efeito de desfoque ao conteúdo que está por trás do cabeçalho. */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px); /* Para compatibilidade com mais browsers. */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Sombra subtil para destacar o cabeçalho do conteúdo. */
+}
+
+header.header-hidden {
+    transform: translateY(-100%);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 27px;
+    text-shadow: var(--sombra-texto);
+}
+
+header li {
+    font-size: 18px;
+    font-family: var(--fonte-titulos); /* Garante que o menu usa a mesma fonte dos títulos. */
+    text-shadow: var(--sombra-texto);
+}
+/* Contentor interno que centra o logo e o menu e define a largura máxima. */
+.header-content {
+    display: flex;
+    justify-content: space-between; /* Coloca o logo à esquerda e o menu à direita. */ 
+    align-items: center;
+    max-width: 1200px; /* Largura padrão para o conteúdo. */
+    margin: 0 auto; /* Centra o contentor na horizontal. */
+    padding: 0 2rem; /* Adiciona um espaçamento nas laterais para não colar nas bordas em ecrãs mais pequenos. */
+}
+
+header nav ul {
+    list-style: none; /* Remove as bolinhas da lista. */
+    display: flex;
+    flex-direction: row; /* Garante que os itens do menu estão sempre na horizontal. */
+    gap: 1.5rem; /* Espaçamento entre os itens do menu. */
+}
+
+header nav a {
+    font-weight: bold;
+    transition: color 0.3s ease; /* Efeito suave na mudança de cor. */
+}
+
+header nav a:hover {
+    color: #d1cdcd; /* Muda a cor ao passar o rato por cima. */
+}
+
+/* Estilo para o item de Login/Logout no menu, para o destacar com um contorno. */
+header .login-item a {
+    background-color: transparent;
+    color: var(--cor-destaque);
+    padding: 0.1rem 1rem; /* Padding ajustado para o botão ser mais baixo e mais largo. */
+    border: 2px solid var(--cor-destaque);
+    border-radius: 5px;
+    text-shadow: none; /* Remove a sombra do texto para melhor legibilidade no botão. */
+    transition: background-color 0.3s, color 0.3s, box-shadow 0.3s, transform 0.3s; /* Adiciona transição para o hover. */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5); /* Adiciona uma sombra para dar profundidade. */
+}
+
+header .login-item a:hover {
+    background-color: var(--cor-destaque); /* Preenche o fundo no hover. */
+    color: var(--cor-primaria); /* O texto fica escuro para contraste. */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6); /* A sombra fica mais forte no hover. */
+    transform: translateY(-2px); /* Efeito de "levantar" o botão. */
+}
+
+/* === Rodapé === */
+footer {
+    background-color: var(--cor-primaria);
+    color: var(--cor-secundaria);
+    text-align: center;
+    padding: 2rem 1rem;
+    border-top: 1px solid var(--cor-destaque);
+}
+
+.copyright { 
+    margin-top: 0;
+    font-size: 0.9rem;
+    color: var(--cor-texto-suave);
+}
+
+
+/* === Conteúdo Principal e Secções === */
+main {
+    /* O padding vertical é 0 para que as secções controlem o seu próprio espaçamento. */
+    padding: 0 2rem;
+    margin-bottom: 2rem; /* Adiciona um espaço entre o fim do conteúdo principal e o rodapé. */
+}
+
+/* Estilo base para as secções dentro do <main> (Galeria, Contactos) */
+main section {  
+    padding: 4rem 2rem;
+    margin: 0 auto;
+    max-width: 1000px; /* Limita a largura do conteúdo para melhor leitura em ecrãs grandes. */
+    margin-top: 2rem; /* Margem no topo para separar as secções. */
+    background-color: var(--cor-fundo-seccao);
+    text-align: center;
+    border-radius: 8px;
+}
+
+/* O texto dos parágrafos dentro das secções é justificado para um look mais limpo e alinhado. */
+main section p {
+    text-align: justify;
+    hyphens: auto; /* Isto ajuda a evitar espaços muito grandes entre palavras em texto justificado. */
+}
+
+
+/* === SECÇÕES DA PÁGINA PRINCIPAL (index.html) === */
+
+/* --- Secção Hero (a primeira secção visível) --- */
+#hero {
+    background: linear-gradient(rgba(0, 0, 0, 0.664), rgba(0, 0, 0, 0.644)), url('imagens/barbearia.jpg') no-repeat center center/cover;
+    color: var(--cor-secundaria);
+    /* A altura mínima é 100% da altura do ecrã (vh = viewport height) para um efeito mais imersivo. */
+    min-height: 100vh; /* Agora a secção ocupa a altura total do ecrã ao carregar. */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+#hero h2 {
+    font-size: 70px;
+    padding-top: 0.1rem;
+    text-shadow: var(--sombra-texto);
+}
+
+#hero p {
+    font-size: 1.3rem; /* Tamanho do subtítulo reduzido */
+    font-weight: bold;
+}
+
+/* --- Secção Sobre Nós --- */
+#sobre { 
+    /* Anula os estilos gerais de 'main section' para que ocupe a largura toda. */
+    max-width: none;
+    border-radius: 0;
+
+    /* Adiciona uma imagem de fundo com um gradiente escuro para legibilidade. */
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('imagens/foto1.JPG') no-repeat center center/cover;
+    background-attachment: fixed; /* Efeito parallax: a imagem fica fixa durante o scroll. */
+    color: var(--cor-secundaria); /* Texto branco para contraste. */
+    
+    /* Adiciona estilos para ocupar o ecrã inteiro e centrar o conteúdo. */
+    min-height: 100vh; /* Garante que a secção ocupa a altura total do ecrã. */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0; /* Remove a margem superior para que cole na secção anterior. */
+}
+
+#sobre h2 {
+    font-size: 3.5rem;
+}
+
+#sobre p {
+    max-width: 600px; /* Limita a largura do parágrafo para melhor leitura. */
+    margin-left: auto;
+    margin-right: auto; /* Centra o parágrafo. */
+    text-align: center; /* Garante que o texto do parágrafo fica centrado. */
+    font-size: 1.1rem;
+}
+
+/* --- Pré-visualização da Galeria (na página inicial) --- */
+.galeria-preview {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Cria 3 colunas de tamanho igual. */
+    gap: 1rem; /* Espaçamento entre as imagens. */
+    margin-top: 2rem;
+}
+
+.preview-item {
+    overflow: hidden; /* Esconde partes da imagem que saem do contentor durante o zoom. */
+    border-radius: 8px; /* Cantos arredondados. */
+    display: block; /* Garante que o link se comporta como um bloco. */
+    aspect-ratio: 1 / 1; /* Força uma proporção quadrada para as imagens. */
+}
+
+.preview-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Garante que a imagem preenche o espaço sem distorcer. */
+    transition: transform 0.4s ease, filter 0.4s ease; /* Transição suave para o hover. */
+    filter: brightness(0.9); /* Escurece ligeiramente a imagem. */
+}
+
+.preview-item:hover img {
+    transform: scale(1.05);
+    filter: brightness(1); /* Restaura o brilho original. */
+}
+
+/* --- Secção Contactos (na página inicial) --- */
+.contact-layout {
+    display: flex;
+    align-items: center; /* Alinha os itens verticalmente ao centro. */
+    gap: 2rem; /* Espaço entre os detalhes e o mapa. */
+    margin-top: 2rem;
+    flex-wrap: wrap; /* Permite que os itens quebrem para a linha de baixo em ecrãs pequenos. */
+}
+
+.contact-details {
+    flex: 1; /* Permite que os detalhes de contacto cresçam para ocupar o espaço. */
+    min-width: 300px; /* Garante uma largura mínima antes de quebrar a linha. */
+    text-align: left; /* O texto é alinhado à esquerda para melhor legibilidade dos detalhes. */
+}
+
+.contact-details p strong{
+    color: var(--cor-destaque-clara); /* Destaca os títulos dos detalhes de contacto. */
+}
+
+
+/* === ESTILOS DE PÁGINAS ESPECÍFICAS === */
+
+/* --- Página da Galeria (galeria.php) --- */
+
+/* Estilos gerais para a página da galeria, usando a classe no <body>. */
+.galeria-page {
+    /* Garante que o fundo e a cor do texto são os mesmos do site principal. */
+    background-color: var(--cor-secundaria);
+    color: var(--cor-primaria); /* O texto passa a ser escuro para contraste. */
+}
+
+/* Cabeçalho específico da página da galeria. */
+.galeria-header,
+.servicos-header {
+    /* Adiciona a imagem de fundo e um gradiente escuro por cima para legibilidade. */
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('imagens/barbearia.jpg') no-repeat center center/cover;
+    color: var(--cor-secundaria); /* O texto volta a ser branco para se destacar no fundo escuro. */
+    padding: 6rem 2rem; /* Aumenta o padding para dar mais impacto. */
+    text-align: center;
+}
+
+/* Garante que o título e o link dentro do cabeçalho da galeria usam as cores corretas. */
+.galeria-header h1{
+    color: var(--cor-destaque-clara);
+    font-size: 60px; /* Tamanho grande para destaque. */
+    font-family: var(--fonte-titulos);
+    text-shadow: 1px 1px 3px #000000;
+}
+
+.galeria-header .back-button {
+    background-color: var(--cor-destaque-clara);
+}
+
+/* Na página da galeria, o <main> não tem padding para a grelha ocupar a largura toda. */
+.galeria-page main {
+    padding: 0;
+    margin-bottom: 0; /* Remove a margem para que a grelha cole na secção do Instagram. */
+}
+
+/* A grelha que vai conter todas as imagens da galeria. */
+.galeria-grid {
+    display: grid; /* Ativa o layout de grelha (Grid). */
+    /* Define uma grelha com exatamente 4 colunas de tamanho igual. */
+    grid-template-columns: repeat(4, 1fr);
+    /* Remove completamente o espaçamento entre as imagens, tanto na horizontal como na vertical. */
+    gap: 0;
+    /* Remove a largura máxima para que a grelha ocupe todo o espaço disponível. */
+    max-width: 100%;
+}
+
+/* Estilo para cada item (imagem) dentro da grelha. */
+.galeria-item {
+    overflow: hidden; /* Esconde qualquer parte da imagem que saia do contentor (útil para o zoom). */
+    position: relative; /* Necessário para efeitos de hover. */
+    /* Define uma proporção de 4:3 (largura:altura), mais comum para fotografias.
+       Isto evita que a imagem seja esticada e cortada de forma estranha. */
+    aspect-ratio: 4 / 3;
+}
+
+.galeria-item img {
+    width: 100%;
+    /* A imagem deve ocupar 100% da altura do seu contentor (.gallery-item). */
+    height: 100%;
+    object-fit: cover; /* Garante que a imagem preenche o espaço sem distorcer. */
+    /* Por defeito, a imagem fica um pouco mais escura. 75% é um bom valor. */
+    filter: brightness(75%);
+    /* Adiciona uma transição suave para o efeito de zoom e para a mudança de brilho. */
+    transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+/* Efeito de zoom e restauro do brilho ao passar o rato por cima da imagem. */
+.galeria-item:hover img {
+    transform: scale(1.05); /* Aumenta ligeiramente o tamanho da imagem. */
+    filter: brightness(100%); /* Restaura o brilho original. */
+}
+
+/* Secção Instagram (usada em galeria.php) */
+.instagram-section {
+    background-color: var(--cor-secundaria); /* Fundo branco suave, para criar contraste. */
+    color: var(--cor-primaria); /* Texto escuro para ser legível no fundo claro. */
+    text-align: center;
+    padding: 4rem 1rem; /* Reduz o padding lateral para dar mais espaço ao widget */
+    margin-top: 0; /* Remove a margem superior para colar na grelha de imagens. */
+}
+
+/* Título da secção */
+.instagram-section h2 {
+    color: var(--cor-primaria); /* Cor preta. */
+    font-size: 2.8rem;
+    margin-bottom: 1rem;
+}
+
+/* Estilo para o parágrafo com o nome de utilizador. */
+.instagram-section p {
+    color: #555; /* TODO: Considerar criar variável --cor-texto-escuro-suave */
+    margin-bottom: 2.5rem; /* Aumenta o espaço entre o texto e o feed */
+    text-align: center;
+}
+
+/* Estilo para o contentor do cabeçalho da página (agenda_barbeiro.php) */
+.page-header-container {
+    text-align: center;
+    margin-top: rem; /* Adiciona uma margem superior para espaçamento */
+}
+
+/* Mapa na secção de contactos (na página inicial) */
+.mapa {
+    flex: 1; /* Permite que o mapa cresça para ocupar o espaço. */
+    min-width: 300px; /* Garante uma largura mínima. */
+    aspect-ratio: 16 / 9; /* Proporção para o mapa, para que não fique muito alto. */
+}
+
+.mapa iframe {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px; /* Adiciona cantos arredondados ao mapa. */
+}
+
+/* --- Páginas de Formulário (login.php, registo.php, marcacao.php) --- */
+.form-page {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('imagens/barbearia.jpg') no-repeat center center/cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem;
+}
+/* O contentor branco/cinza que envolve o formulário. */
+.form-container {
+    background-color: var(--cor-fundo-seccao);
+    padding: 2.5rem;
+    border-radius: 8px;
+    width: 35%;
+    max-width: 400px;
+    text-align: center;
+    border: 1px solid var(--cor-destaque);
+}
+
+.form-container h2 {
+    margin-bottom: 2rem;
+    font-size: 2rem;
+}
+/* O logo "Souto Barbearia" no topo dos formulários. */
+.form-logo h1 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+    color: var(--cor-secundaria);
+}
+
+.form-logo {
+    display: inline-block; /* Garante que a transformação funciona corretamente. */
+    transition: transform 0.3s ease-in-out;
+}
+
+.form-logo:hover {
+    transform: scale(1.05); /* Efeito de zoom subtil ao passar o rato. */
+}
+
+.form-group {
+    margin-bottom: 2rem; /* Aumenta o espaçamento entre os campos do formulário. */
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--cor-secundaria);
+    font-weight: 600;
+}
+
+.form-group label1 {
+    display: block;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    color: var(--cor-secundaria);
+    font-weight: 600;
+}
+
+/* Estilo unificado para todos os campos de formulário (input e select). */
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 0.8rem;
+    background-color: var(--cor-primaria);
+    border: 1px solid var(--cor-borda-escura);
+    border-radius: 5px;
+    color: var(--cor-secundaria);
+    font-size: 1rem;
+    font-family: var(--fonte-principal); /* Garante a consistência da fonte. */
+    -webkit-appearance: none; /* Remove o estilo padrão do navegador (Chrome, Safari). */
+    -moz-appearance: none;    /* Remove o estilo padrão do navegador (Firefox). */
+    appearance: none;         /* Remove o estilo padrão do navegador. */
+}
+
+/* Garante que o botão ocupa a largura total do formulário. */
+.form-container .cta-button {
+    width: 100%;
+    font-size: 1.1rem;
+    margin-top: 1rem;
+}
+
+/* Estilo para o texto de troca (ex: "Não tem conta? Registe-se aqui"). */
+.form-switch {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+}
+
+/* --- Página de Serviços (servicos.php) --- */
+
+/* Estilos para o corpo da página de serviços */
+.servicos-page {
+    background-color: var(--cor-primaria);
+    color: var(--cor-secundaria);
+}
+
+.servicos-header h1 {
+    color: var(--cor-destaque);
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    text-shadow: var(--sombra-texto);
+}
+
+/* Conteúdo principal da página de serviços */
+.servicos-main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+}
+
+/* Categoria de serviço (ex: "Cortes de Cabelo") */
+.servico-categoria {
+    margin-bottom: 4rem;
+}
+
+.servico-categoria h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 2.5rem;
+    border-bottom: 2px solid var(--cor-destaque);
+    padding-bottom: 0.5rem;
+    display: inline-block;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Adiciona uma sombra para dar profundidade ao título. */
+}
+
+/* Grelha para os itens de serviço */
+.servicos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+/* Cartão individual de cada serviço */
+.servico-item {
+    background-color: var(--cor-fundo-seccao);
+    padding: 2rem;
+    border-radius: 8px;
+    border: 1px solid var(--cor-borda-escura);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.servico-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.servico-item h3 { font-size: 1.5rem; }
+.servico-item p { flex-grow: 1; color: #ccc; } /* TODO: Considerar criar variável --cor-texto-cinza */
+.servico-item .preco { font-size: 1.8rem; font-weight: bold; color: var(--cor-destaque); text-align: right; margin-top: 1rem; flex-grow: 0; }
+
+/* === Media Queries para Responsividade === */
+/* Media queries ajustam o layout para diferentes tamanhos de ecrã. */
+/* Para tablets em modo paisagem e alguns portáteis (até 1024px) */
+@media (max-width: 1024px) {
+    header nav ul {
+        gap: 1.2rem;
+    }
+
+    header li {
+        font-size: 17px; /* Tamanho do menu reduzido para esta resolução */
+    }
+
+    main section {
+        padding: 3rem 1.5rem;
+    }
+
+    #hero h2 {
+        font-size: 4.5rem; /* Reduz o tamanho do título principal */
+    }
+}
+
+/* Para tablets em modo retrato e telemóveis grandes (até 768px) */
+@media (max-width: 768px) {
+    /* No responsive styling needed for the navigation menu */
+    
+    #hero p {
+        font-size: 1.2rem;
+    }
+
+    main {
+        padding: 0 1rem; /* Reduz o espaçamento lateral do conteúdo principal */
+    }
+
+    #hero h2, #sobre h2, .servicos-header h1 {
+        font-size: 3rem; /* Reduz ainda mais o título */
+    }
+
+
+    /* Ajustes para o layout de contactos e pré-visualização da galeria */
+    .contact-layout {
+        flex-direction: column; /* Coloca o mapa debaixo dos detalhes em tablets e telemóveis. */
+    }
+
+    /* Em ecrãs mais pequenos, as imagens da pré-visualização ficam numa única coluna. */
+    .galeria-preview {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .servico-categoria h2 {
+        font-size: 2rem;
+    }
+
+    /* Ajusta a grelha principal da galeria para 2 colunas */
+    .galeria-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Para a maioria dos telemóveis (até 480px) */
+@media (max-width: 480px) {
+    body {
+        line-height: 1.5; /* Ajusta a altura da linha para texto mais pequeno */
+    }
+
+    /* Reduz o espaçamento lateral do cabeçalho em ecrãs muito pequenos */
+    .header-content {
+        padding: 0 1rem;
+    }
+
+    .cta-button {
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+    }
+
+    /* Ajustes para a página de serviços em telemóveis */
+    .servicos-main {
+        padding: 2rem 1rem;
+    }
+
+    .servicos-grid {
+        grid-template-columns: 1fr; /* Uma coluna em telemóveis */
+    }
+
+    /* Ajusta a grelha principal da galeria para 1 coluna */
+    .galeria-grid {
+        grid-template-columns: 1fr;
+    }
+
+    #hero h2 {
+        font-size: 2.5rem;
+    }
+}
+
+/* Media Query específica para os formulários em ecrãs pequenos (até 600px) */
+@media (max-width: 600px) {
+    .form-container {
+        width: 90%; /* Ocupa 90% da largura do ecrã */
+        padding: 20px; /* Reduz o espaçamento interno */
+        margin: 20px auto; /* Adiciona uma pequena margem superior/inferior */
+    }
+
+    .form-page h2 {
+        font-size: 1.8rem; /* Reduz o tamanho do título principal */
+    }
+}
+
+/* Estilo para o contentor do cabeçalho da página (agenda_barbeiro.php) */
+.page-header-container {
+    text-align: center;
+    margin-top: 2rem; /* Adiciona uma margem superior para espaçamento */
+}
+
+/* Estilo para o background da página da agenda do barbeiro */
+.agenda-body-background {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('imagens/barbearia.jpg') no-repeat center center/cover;
+    min-height: 100vh;
+    background-attachment: fixed; /* Adiciona efeito parallax */
+}
+
+/* Contentor que envolve o calendário, dando-lhe um fundo escuro e centrando-o. */
+.agenda-calendario {
+    max-width: 1000px;
+    margin: 2rem auto; 
+    padding: 1rem;
+    background-color: var(--cor-fundo-seccao); /* Fundo escuro */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    color: var(--cor-secundaria); /* Garante que o texto do calendário é visível sobre o fundo escuro */
+}
+
+/* Estilo para os botões do FullCalendar (ex: "mês", "semana", "hoje"). */
+.fc .fc-button-primary {
+    background-color: var(--cor-primaria);
+    border-color: var(--cor-primaria);
+}
+
+.fc .fc-button-primary:hover {
+    background-color: #222;
+    border-color: #222;
+}
+
+/* Estilo para os eventos (as marcações) dentro do calendário. */
+.fc-event {
+    background-color: var(--cor-destaque) !important;
+    border-color: var(--cor-destaque) !important;
+    color: var(--cor-primaria) !important;
+    font-weight: 600;
+}
+
+/* === Estilos para o botão de ver palavra-passe === */
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-wrapper input {
+    padding-right: 2.5rem; /* Adiciona espaço para o ícone */
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    user-select: none; /* Impede que o texto seja selecionado */
+    font-size: 0.9rem;
+    color: var(--cor-texto-suave);
+}
+
+/* === Estilos para o ícone de calendário no campo de data === */
+.date-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.calendar-icon {
+    position: absolute;
+    right: 10px;
+    cursor: pointer; /* Adicionado para indicar que é clicável */
+    color: var(--cor-secundaria);
+}
+
+/* Esconde o ícone de calendário padrão do navegador */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    display: none;
+}
+
+/* Estilos para o container do calendário */
+.agenda-calendario {
+    max-width: 900px;
+    margin: 2rem auto;
+    background-color: var(--cor-fundo-seccao);
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    min-height: 600px;
+}
+
+/* Estilos para os botões e eventos do FullCalendar */
+.fc .fc-button-primary {
+    background-color: var(--cor-primaria);
+    border-color: var(--cor-primaria);
+    color: var(--cor-secundaria);
+}
+.fc .fc-button-primary:hover {
+    background-color: #222;
+    border-color: #222;
+}
+.fc-event {
+    background-color: var(--cor-destaque) !important;
+    border-color: var(--cor-destaque) !important;
+    color: var(--cor-primaria) !important;
+    font-weight: 600;
+}
+
+/* === Estilos Específicos para o FullCalendar === */
+
+/* Cor do fundo e texto principal da caixa do calendário */
+.agenda-calendario {
+    max-width: 1200px; /* Aumentar largura para melhor visualização */
+    margin: 2rem auto;
+    background-color: var(--cor-fundo-seccao); /* #1a1a1a */
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Sombra mais forte */
+    min-height: 700px; /* Garantir que ocupe espaço */
+    color: var(--cor-secundaria); /* Texto Geral Branco */
+}
+
+/* Título e botões da barra de ferramentas (Mês, Semana, Hoje) */
+.fc .fc-toolbar-title,
+.fc .fc-button {
+    color: var(--cor-secundaria) !important; /* Branco */
+}
+
+/* Fundo dos botões da barra de ferramentas */
+.fc .fc-button-primary {
+    background-color: var(--cor-destaque-clara); /* Bronze */
+    border-color: var(--cor-destaque-clara);
+}
+
+/* Cor do texto nos cabeçalhos (dias da semana) e números dos dias */
+.fc-col-header-cell, 
+.fc-daygrid-day-number,
+.fc-timegrid-slot-label,
+.fc .fc-list-day-text,
+.fc .fc-list-day-side-text {
+     color: var(--cor-texto-suave); /* Cinza claro */
+}
+
+/* Cor da linha do tempo se estiver em timeGrid */
+.fc-theme-standard td, .fc-theme-standard th {
+    border-color: var(--cor-borda-escura);
+}
+
+/* Cor do evento (para estados não confirmados/pendentes) */
+.fc-event {
+    color: #fff !important; 
+    border-radius: 4px;
+    padding: 2px 4px;
+}
+
+/* Força o rodapé a ficar no fundo da página */
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+    footer {
+        margin-top: auto;
+    }
+
+    /* Estilo do Painel da Tabela (Vidro Escuro) */
+    .marcacoes-panel {
+        background-color: rgba(18, 18, 18, 0.95); /* Fundo muito escuro */
+        border: 1px solid #c5a47e; /* Borda Dourada */
+        border-radius: 8px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        padding: 20px;
+        margin-bottom: 40px;
+    }
+
+    /* Estilo da Tabela */
+    .custom-table {
+        width: 100%;
+        color: #e0e0e0;
+        border-collapse: separate;
+        border-spacing: 0 10px; /* Espaço entre linhas */
+    }
+    .custom-table thead th {
+        color: #c5a47e; /* Texto Dourado */
+        font-family: 'Playfair Display', serif;
+        font-size: 1.1rem;
+        border-bottom: 2px solid #c5a47e;
+        padding: 10px;
+        text-align: left;
+    }
+    .custom-table tbody tr {
+        background-color: rgba(255, 255, 255, 0.05);
+        transition: transform 0.2s, background-color 0.2s;
+    }
+    .custom-table tbody tr:hover {
+        background-color: rgba(212, 175, 55, 0.1); /* Brilho dourado ao passar o rato */
+        transform: scale(1.01);
+    }
+    .custom-table td {
+        padding: 15px 10px;
+        border-top: 1px solid #333;
+        vertical-align: middle;
+    }
+    
+    /* Estilo dos Estados */
+    .status-badge {
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .status-confirmada { background-color: rgba(40, 167, 69, 0.2); color: #28a745; border: 1px solid #28a745; }
+    .status-pendente { background-color: rgba(255, 193, 7, 0.2); color: #ffc107; border: 1px solid #ffc107; }
+    .status-cancelada { background-color: rgba(220, 53, 69, 0.2); color: #dc3545; border: 1px solid #dc3545; }
+
+    /* Botão Cancelar */
+    .btn-cancelar {
+        background-color: transparent;
+        border: 1px solid #dc3545;
+        color: #dc3545;
+        padding: 5px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 0.9rem;
+    }
+    .btn-cancelar:hover {
+        background-color: #dc3545;
+        color: white;
+    }
+
+/* === Seletor de Serviços por Categoria (Menu de Abas) === */
+.categoria-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.categoria-btn {
+    background-color: transparent;
+    border: 1px solid var(--cor-destaque);
+    color: var(--cor-secundaria);
+    padding: 8px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: var(--fonte-principal);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+}
+
+.categoria-btn.active, .categoria-btn:hover {
+    background-color: var(--cor-destaque);
+    color: var(--cor-primaria);
+    box-shadow: 0 4px 12px rgba(197, 164, 126, 0.3);
+}
+
+.servicos-lista {
+    display: none;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 15px;
+    animation: fadeIn 0.4s ease;
+}
+
+.servicos-lista.active {
+    display: grid;
+}
+
+.servico-card {
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--cor-borda-escura);
+    padding: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s;
+}
+
+.servico-card:hover, .servico-card.selected {
+    border-color: var(--cor-destaque);
+    background-color: rgba(197, 164, 126, 0.15);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
