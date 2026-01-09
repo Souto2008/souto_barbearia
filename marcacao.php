@@ -40,11 +40,10 @@ require __DIR__ . '/config/db.php'; // Para a variável $pdo
         <?php // 3. EXIBIÇÃO DE MENSAGENS DE SUCESSO OU ERRO ?>
         <?php // Verifica se existem parâmetros 'sucesso' ou 'erro' na URL (enviados pelo processa_marcacao.php). ?>
         <?php if (isset($_GET['sucesso']) || isset($_GET['erro'])): ?>
-            <?php // Adiciona uma classe CSS 'form-success' ou 'form-error' para estilizar a mensagem. ?>
-            <p class="<?php echo isset($_GET['sucesso']) ? 'form-success' : 'form-error'; ?>">
+            <div class="alert <?php echo isset($_GET['sucesso']) ? 'alert-success' : 'alert-danger'; ?>">
                 <?php 
                     if (isset($_GET['sucesso'])) {
-                        // Mensagem de sucesso (a parte do email foi removida do processamento).
+                        // Mensagem de sucesso.
                         echo "Marcação agendada com sucesso!";
                     } elseif (isset($_GET['erro'])) {
                         $erro = $_GET['erro'];
@@ -67,7 +66,7 @@ require __DIR__ . '/config/db.php'; // Para a variável $pdo
                         }
                     }
                 ?>
-            </p>
+            </div>
         <?php endif; ?>
 
         <form action="processa_marcacao.php" method="POST">
